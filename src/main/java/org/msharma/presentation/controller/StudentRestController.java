@@ -1,19 +1,12 @@
 package org.msharma.presentation.controller;
 
 import com.google.inject.Inject;
-import org.msharma.config.ApplicationBootstrap;
 import org.msharma.domain.facade.StudentFacade;
+import org.msharma.presentation.dto.StudentDTO;
+import org.msharma.presentation.util.CustomObjectMapper;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-
-import javax.annotation.Resource;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * This controller acts as the request handler for all student business service requests.
@@ -21,8 +14,11 @@ import java.util.List;
  */
 public class StudentRestController
 {
-	//@Inject
+	@Inject
 	private StudentFacade studentFacade;
+
+	@Inject
+	private CustomObjectMapper objectMapper;
 
 	/**
 	 * This is the base request handler which is invoked when the user hits "/student". This returns the
@@ -30,7 +26,7 @@ public class StudentRestController
 	 * @param modelAndView
 	 * @return the basic view.
 	 */
-	public static Route getStudentHomePage = (Request request, Response response) -> {
+	public Route getStudentHomePage = (Request request, Response response) -> {
 		response.redirect("views/student.html");
 		return "";
 	};
@@ -39,8 +35,8 @@ public class StudentRestController
 	 * This handler returns all the students.
 	 * @return list of students
 	 */
-	public static Route getAllStudent = (Request request, Response response) -> {
-		return "";
+	public Route getAllStudent = (Request request, Response response) -> {
+		return objectMapper.dataToJson(studentFacade.findAllStudents());
 	};
 
 	/**
@@ -48,9 +44,10 @@ public class StudentRestController
 	 * @param rollNumber
 	 * @return the fetched student
 	 */
-	public static Route  getStudentByRoll = (Request request, Response response) -> {
-		String rollNumber = request.queryParams("rollNumber");
-		return rollNumber;
+	public Route  getStudentByRoll = (Request request, Response response) -> {
+		Integer rollNumber = Integer.parseInt(request.queryParams("rollNumber"));
+		StudentDTO dto = studentFacade.findStudentByRollNumber(rollNumber);
+		return objectMapper.dataToJson(dto);
 	};
 
 	/**
@@ -58,7 +55,7 @@ public class StudentRestController
 	 * @param firstName
 	 * @return list of students
 	 */
-	public static Route getAllStudentHavingName = (Request request, Response response) -> {
+	public Route getAllStudentHavingName = (Request request, Response response) -> {
 		return null;
 	};
 
@@ -67,7 +64,7 @@ public class StudentRestController
 	 * @param studentDTO
 	 * @return the response of action
 	 */
-	public static Route save = (Request request, Response response) -> {
+	public Route save = (Request request, Response response) -> {
 		return null;
 	};
 
@@ -76,7 +73,7 @@ public class StudentRestController
 	 * @param students
 	 * @return the response of action
 	 */
-	public static Route update = (Request request, Response response) -> {
+	public Route update = (Request request, Response response) -> {
 		return null;
 	};
 
@@ -84,7 +81,7 @@ public class StudentRestController
 	 * This handler can be used to get the count of all the students available
 	 * @return list of students
 	 */
-	public static Route count= (Request request, Response response) -> {
+	public Route count= (Request request, Response response) -> {
 		return null;
 	};
 
@@ -92,7 +89,7 @@ public class StudentRestController
 	 * This handler can be used to get the count of all the students having the given name.
 	 * @return list of students
 	 */
-	public static Route countByFirstName = (Request request, Response response) -> {
+	public Route countByFirstName = (Request request, Response response) -> {
 		return null;
 	};
 }

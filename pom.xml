@@ -130,6 +130,12 @@
       <version>1.9.3</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>JavaLiteSparkJavaDemo</finalName>
@@ -145,7 +151,20 @@
       </plugin>
 
       <!-- embedded Jetty server, for testing -->
-
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.2.11.v20150529</version>
+        <configuration>
+          <httpConnector>
+            <port>9009</port>
+          </httpConnector>
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <webApp>
+            <contextPath>/spark</contextPath>
+          </webApp>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.javalite</groupId>
         <artifactId>activejdbc-instrumentation</artifactId>

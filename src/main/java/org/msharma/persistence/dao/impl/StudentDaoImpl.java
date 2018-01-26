@@ -2,8 +2,10 @@ package org.msharma.persistence.dao.impl;
 
 import com.google.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
+import org.javalite.activejdbc.Base;
 import org.msharma.domain.model.Student;
 import org.msharma.persistence.dao.StudentDao;
+import org.msharma.persistence.repository.DataSourceFactory;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -16,18 +18,9 @@ import java.util.List;
  */
 public class StudentDaoImpl implements StudentDao
 {
-	//@Value("${development.driver}")
-	private String driver;
-	//@Value("${development.username}")
-	private String username;
-	//@Value("${development.password}")
-	private String password;
-	//@Value("${development.url}")
-	private String url;
 
 	@Inject
-	private DataSource dataSource;
-
+	private DataSourceFactory dataSourceFactory;
 	/*
 	 * (non-Javadoc)
 	 *
@@ -109,6 +102,17 @@ public class StudentDaoImpl implements StudentDao
 	{
 		Long count = Student.count("first_name = ?", firstName);
 		return count;
+	}
+
+	private void openConnection()
+	{
+		DataSource dataSource = dataSourceFactory.getDataSource();
+		Base.open(dataSource);
+	}
+
+	private void closeConnection()
+	{
+		Base.close();
 	}
 
 }

@@ -1,17 +1,21 @@
 package org.msharma.config;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.apache.commons.lang3.BooleanUtils;
+import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.DB;
+import org.msharma.domain.facade.StudentFacade;
+import org.msharma.persistence.repository.DataSourceFactory;
 import org.msharma.presentation.controller.CommonController;
 import org.msharma.presentation.controller.StudentRestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
-import spark.servlet.SparkFilter;
 
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
+import javax.sql.DataSource;
 
 import static spark.Spark.*;
 
@@ -20,24 +24,49 @@ import static spark.Spark.*;
  */
 public class ApplicationBootstrap
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationBootstrap.class);
+
 	public static void main(String[] args) throws Exception
 	{
-		staticFiles.location("/static");
+		Injector injector = Guice.createInjector(new CustomModule());
+		StudentRestController controller = injector.getInstance(StudentRestController.class);
+		DataSourceFactory dataSourceFactory = injector.getInstance(DataSourceFactory.class);
+		DataSource dataSource = dataSourceFactory.getDataSource();
+		//only for development.
+		String projectDir = System.getProperty("user.dir");
+		String staticDir = "/src/main/resources/static";
+		staticFiles.externalLocation(projectDir + staticDir);
+		//staticFiles.location("/static");
 		staticFiles.expireTime(600L);
 
-		//before("*",                  addTrailingSlashes);
+		before("/student/*", (request, response) -> {
+			if(BooleanUtils.isFalse(Base.hasConnection()))
+			{
+				LOGGER.info("Connection Open!");
+				Base.open(dataSource);
+				Base.openTransaction();
+			}
+		});
+		after("/student/*", (request, response) -> {
+			if(BooleanUtils.isTrue(Base.hasConnection()))
+			{
+				LOGGER.info("Connection Closed!");
+				Base.commitTransaction();
+				Base.close();
+			}
+		});
+
 		before("*",                  handleLocaleChange);
 		get("/",          "text/html", CommonController.getHomePage);
 		get("/getAppJS",          "text/javascript", CommonController.getAppJS);
-		get("/student",          "text/html", StudentRestController.getStudentHomePage);
-		get("/allstudents/",          StudentRestController.getAllStudent);
-		get("/getStudentByRoll",          StudentRestController.getStudentByRoll);
-		get("/getAllStudentHavingName/",          StudentRestController.getAllStudentHavingName);
-		get("/count/",          StudentRestController.count);
-		get("/countByFirstName/",          StudentRestController.countByFirstName);
-		post("/save",          StudentRestController.save);
-		post("/update",          StudentRestController.update);
-
+		get("/student",          "text/html", controller.getStudentHomePage);
+		get("/student/allstudents",          controller.getAllStudent);
+		get("/student/getStudentByRoll",          controller.getStudentByRoll);
+		get("/student/getAllStudentHavingName",          controller.getAllStudentHavingName);
+		get("/student/count",          controller.count);
+		get("/student/countByFirstName",          controller.countByFirstName);
+		post("/student/save",          controller.save);
+		post("/student/update",          controller.update);
 	}
 
 	public static Filter addTrailingSlashes = (Request request, Response response) -> {

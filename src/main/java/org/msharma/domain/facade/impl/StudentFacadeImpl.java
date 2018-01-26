@@ -1,5 +1,6 @@
 package org.msharma.domain.facade.impl;
 
+import com.google.inject.Inject;
 import org.msharma.domain.facade.StudentFacade;
 import org.msharma.domain.services.StudentService;
 import org.msharma.presentation.dto.StudentDTO;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class StudentFacadeImpl implements StudentFacade
 {
-	@Resource
+	@Inject
 	private StudentService studentService;
 
 	/*
