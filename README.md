@@ -1,5 +1,5 @@
 # SparkJavaLiteDemo(In Progress)
-This repository demonstrates how we can use JavaLite ActiveJDBC for Database connection management along with SparkJava for microservices and Google Guice for dependency injection.
+This repository demonstrates how we can use JavaLite ActiveJDBC for Database connection management along with SparkJava for microservices and Google Guice for dependency injection. Used AngularJS for client data binding.
 
 Steps to run the application.
 
