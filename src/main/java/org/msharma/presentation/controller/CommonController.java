@@ -30,4 +30,13 @@ public class CommonController
 		response.redirect("js/app.js");
 		return StringUtils.EMPTY;
 	};
+
+	/**
+	 * This is the base request handler which is invoked when the user hits "/". This returns the
+	 * basic welcome view.
+	 * @return the basic view.
+	 */
+	public static Route getFavicon = (Request request, Response response) -> {
+		return StringUtils.EMPTY;
+	};
 }

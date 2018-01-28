@@ -58,8 +58,9 @@ public class ApplicationBootstrap
 
 		before("*",                  handleLocaleChange);
 		get("/",          "text/html", CommonController.getHomePage);
+		get("/favicon.ico",          "text/html", CommonController.getFavicon);
 		get("/getAppJS",          "text/javascript", CommonController.getAppJS);
-		get("/student",          "text/html", controller.getStudentHomePage);
+		get("/student",          "text/html", controller.getStudentCommonHomePage);
 		get("/student/allstudents",          controller.getAllStudent);
 		get("/student/getStudentByRoll",          controller.getStudentByRoll);
 		get("/student/getAllStudentHavingName",          controller.getAllStudentHavingName);

@@ -26,8 +26,8 @@ public class StudentRestController
 	 * @param modelAndView
 	 * @return the basic view.
 	 */
-	public Route getStudentHomePage = (Request request, Response response) -> {
-		response.redirect("views/student.html");
+	public Route getStudentCommonHomePage = (Request request, Response response) -> {
+		response.redirect("views/studentview.html");
 		return "";
 	};
 

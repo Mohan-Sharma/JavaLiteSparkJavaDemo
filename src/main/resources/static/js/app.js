@@ -1,6 +1,6 @@
 (function (angular) {
     "use strict";
-    var app= angular.module('javaLiteApp', []);
+    var app= angular.module('javaLiteApp', ['ngRoute', 'ui.bootstrap']);
 
     app.service("studentService", function($http, $q){
         return {
