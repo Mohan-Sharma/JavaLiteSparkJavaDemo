@@ -1,5 +1,6 @@
 package org.msharma.domain.facade.impl;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import org.msharma.domain.facade.StudentFacade;
 import org.msharma.domain.services.StudentService;
@@ -10,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mohan Sharma Created on 22/01/18.
@@ -75,9 +77,12 @@ public class StudentFacadeImpl implements StudentFacade
 	 * @see org.msharma.domain.facade.StudentFacade#count()
 	 */
 	@Override
-	public Long count()
+	public Map<String, Long> count()
 	{
-		return studentService.count();
+		Long count = studentService.count();
+		Map countMap = Maps.newHashMap();
+		countMap.put("count", count);
+		return countMap;
 	}
 
 	/*
@@ -86,8 +91,12 @@ public class StudentFacadeImpl implements StudentFacade
 	 * @see org.msharma.domain.facade.StudentFacade#countByFirstName(java.util.String)
 	 */
 	@Override
-	public Long countByFirstName(String firstName)
+	public Map<String, Long> countByFirstName(String firstName)
 	{
-		return studentService.countByFirstName(firstName);
+		Long count = studentService.countByFirstName(firstName);
+		Map countMap = Maps.newHashMap();
+		countMap.put("firstName", firstName);
+		countMap.put("count", count);
+		return countMap;
 	}
 }

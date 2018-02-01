@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This interface abstracts the user from the complex business services implementations
@@ -49,12 +50,12 @@ public interface StudentFacade
 	 * This function returns the count of all the students available.
 	 * @return number of students in db.
 	 */
-	Long count();
+	Map<String, Long> count();
 
 	/**
 	 * This function returns the count of all the student whose first name matches the given firstName
 	 * @param firstName
 	 * @return number of students satisfying the criteria in db.
 	 */
-	Long countByFirstName(String firstName);
+	Map<String, Long> countByFirstName(String firstName);
 }
