@@ -74,16 +74,20 @@ public class StudentRestController
 	 * @return the response of action
 	 */
 	public Route save = (Request request, Response response) -> {
-		return null;
+		String body = request.body();
+		StudentDTO studentDTO = objectMapper.jsonToData(body);
+		return objectMapper.dataToJson(studentFacade.save(studentDTO));
 	};
 
 	/**
-	 * This handler can be used to save all the student data.
+	 * This handler can be used to update the student data.
 	 * @param students
 	 * @return the response of action
 	 */
 	public Route update = (Request request, Response response) -> {
-		return null;
+		String body = request.body();
+		StudentDTO studentDTO = objectMapper.jsonToData(body);
+		return objectMapper.dataToJson(studentFacade.update(studentDTO));
 	};
 
 	/**
@@ -101,7 +105,7 @@ public class StudentRestController
 	 */
 	public Route countByFirstName = (Request request, Response response) -> {
 		String param = request.queryParams("firstName");
-		Map<String, Long> countMap = studentFacade.countByFirstName(param);
+		Map<String, Object> countMap = studentFacade.countByFirstName(param);
 		return objectMapper.dataToJson(countMap);
 	};
 }

@@ -38,13 +38,13 @@ public interface StudentService
 	 * This function saves the Student model in db.
 	 * @param student
 	 */
-	void save(StudentDTO student);
+	boolean save(StudentDTO student);
 
 	/**
-	 * This function saves the collection of students in DB
-	 * @param students
+	 * This function update the student data in db
+	 * @param student
 	 */
-	void saveAll(Collection<StudentDTO> students);
+	boolean update(StudentDTO student);
 
 	/**
 	 * This function returns the count of all the records.

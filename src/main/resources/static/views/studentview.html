@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <button type="submit" class="btn btn-success" data-animation="am-flip-x" ng-click="fetchStudentByRollNumber()" ng-disabled="studentForm.$invalid">search</button>
+                                        <button type="submit" class="btn btn-success" data-animation="am-flip-x" ng-click="fetchStudentByRollNumber('first')" ng-disabled="studentForm.$invalid">search</button>
                                     </div>
                                     <div class="col-sm-3">
                                         <button type="button" class="btn btn-danger" data-animation="am-flip-x" ng-click="clearForm(studentForm, 'first')" ng-show="showClearButtonOne">clear</button>
@@ -172,20 +172,108 @@
             <div uib-accordion open-others="true">
                 <div uib-accordion-group>
                     <div uib-accordion-heading>
-                        WRITE<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionStatus.mainAssuredDetails, 'glyphicon-chevron-right': !accordionStatus.mainAssuredDetails}"></i>
+                        SAVE NEW STUDENT<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionStatus.mainAssuredDetails, 'glyphicon-chevron-right': !accordionStatus.mainAssuredDetails}"></i>
                     </div>
-                    <div class="bs-callout  bs-callout-info" style="overflow:auto;height:440px;"
-                    >
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group ">
-                                    <label class="control-label">Insured First Name</label>
-                                    <input id="First"
-                                           name="policyNumber"
-                                           type="text"
-                                           class="form-control input-md"/>
+                    <div class="bs-callout  bs-callout-info" style="overflow:auto;height:350px;">
+                        <div class="container-fluid" style="margin-top:50px;">
+                            <ng-form name="studentForm" novalidate>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="form-group required">
+                                            <label for="rollNumber" class="control-label">Roll Number:</label>
+                                            <input name="rollNumber" type="text" class="form-control input-sm" placeholder="Enter Roll Number" ng-model="student.rollNumber" required/>
+                                            <div class="text-danger" ng-messages="studentForm.rollNumber.$error" ng-if="studentForm.rollNumber.$dirty">
+                                                <small class="error" ng-message="required">Please enter roll number.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label for="firstName" class="control-label">First Name:</label>
+                                            <input name="firstName" type="text" class="form-control input-sm" placeholder="Enter First Name" ng-model="student.firstName" required/>
+                                            <div class="text-danger" ng-messages="studentForm.firstName.$error" ng-if="studentForm.firstName.$dirty">
+                                                <small class="error" ng-message="required">Please enter first name.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label for="lastName" class="control-label">Last Name:</label>
+                                            <input name="lastName" type="text" class="form-control input-sm" placeholder="Enter Last Name" ng-model="student.lastName" required/>
+                                            <div class="text-danger" ng-messages="studentForm.lastName.$error" ng-if="studentForm.lastName.$dirty">
+                                                <small class="error" ng-message="required">Please enter last name.</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col-lg-3 text-success" ng-if="saveResult.success">
+                                        <small class="success">{{saveResult.success}}</small>
+                                    </div>
+                                    <div class="col-lg-3 text-danger" ng-if="saveResult.error">
+                                        <small class="success">{{saveResult.error}}</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <button type="submit" class="btn btn-success" data-animation="am-flip-x" ng-click="saveStudent(studentForm)" ng-disabled="studentForm.$invalid">save</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button type="button" class="btn btn-danger" data-animation="am-flip-x" ng-click="clearForm(studentForm, 'fourth')" ng-show="showClearButtonFour">clear</button>
+                                    </div>
+                                </div>
+                            </ng-form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div uib-accordion open-others="true">
+                <div uib-accordion-group>
+                    <div uib-accordion-heading>
+                        UPDATE STUDENT<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordionStatus.mainAssuredDetails, 'glyphicon-chevron-right': !accordionStatus.mainAssuredDetails}"></i>
+                    </div>
+                    <div class="bs-callout  bs-callout-info" style="overflow:auto;height:350px;">
+                        <div class="container-fluid" style="margin-top:50px;">
+                            <ng-form name="studentForm" novalidate>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="form-group required">
+                                            <label for="rollNumber" class="control-label">Roll Number:</label>
+                                            <input name="rollNumber" type="text" class="form-control input-sm" placeholder="Enter Roll Number" ng-model="studentByRollNumber.rollNumber" required ng-readonly="showClearButtonFive"/>
+                                            <button type="submit" class="btn btn-success form-control input-sm" data-animation="am-flip-x" ng-click="fetchStudentByRollNumber('fifth')">fetch</button>
+                                            <div class="text-danger" ng-messages="studentForm.rollNumber.$error" ng-if="studentForm.rollNumber.$dirty">
+                                                <small class="error" ng-message="required">Please enter roll number.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label for="firstName" class="control-label">First Name:</label>
+                                            <input name="firstName" type="text" class="form-control input-sm" placeholder="Enter First Name" ng-model="studentByRollNumber.firstName" required/>
+                                            <div class="text-danger" ng-messages="studentForm.firstName.$error" ng-if="studentForm.firstName.$dirty">
+                                                <small class="error" ng-message="required">Please enter first name.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required">
+                                            <label for="lastName" class="control-label">Last Name:</label>
+                                            <input name="lastName" type="text" class="form-control input-sm" placeholder="Enter Last Name" ng-model="studentByRollNumber.lastName" required/>
+                                            <div class="text-danger" ng-messages="studentForm.lastName.$error" ng-if="studentForm.lastName.$dirty">
+                                                <small class="error" ng-message="required">Please enter last name.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 text-success" ng-if="updateResult.success">
+                                        <small class="success">{{updateResult.success}}</small>
+                                    </div>
+                                    <div class="col-lg-6 text-danger" ng-if="updateResult.error">
+                                        <small class="success">{{updateResult.error}}</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <button type="submit" class="btn btn-success" data-animation="am-flip-x" ng-click="updateStudent(studentForm)" ng-disabled="studentForm.$invalid">save</button>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-danger" data-animation="am-flip-x" ng-click="clearForm(studentForm, 'fifth')" ng-show="showClearButtonFive">clear</button>
+                                    </div>
+                                </div>
+                            </ng-form>
                         </div>
                     </div>
                 </div>

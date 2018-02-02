@@ -6,6 +6,7 @@ import org.javalite.activejdbc.Base;
 import org.msharma.domain.model.Student;
 import org.msharma.persistence.dao.StudentDao;
 import org.msharma.persistence.repository.DataSourceFactory;
+import org.msharma.presentation.dto.StudentDTO;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -63,21 +64,37 @@ public class StudentDaoImpl implements StudentDao
 	 * @see org.msharma.persistence.dao.StudentDao#save(org.msharma.domain.model.Student)
 	 */
 	@Override
-	public void save(Student student)
+	public boolean save(Student student)
 	{
-		student.saveIt();
+		try
+		{
+			return student.insert();
+		}
+		catch (Exception e)
+		{
+			return Boolean.FALSE;
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.msharma.persistence.dao.StudentDao#saveAll(java.util.Collection)
+	 * @see org.msharma.persistence.dao.StudentDao#update(org.msharma.domain.model.Student)
 	 */
 	@Override
-	public void saveAll(Collection<Student> students)
+	public boolean update(StudentDTO studentData)
 	{
-		if(CollectionUtils.isNotEmpty(students))
-			students.forEach(student -> student.saveIt());
+		try
+		{
+			Student student = Student.findFirst("roll_number = ?", studentData.getRollNumber());
+			student.setFirstName(studentData.getFirstName());
+			student.setLastName(studentData.getLastName());
+			return student.saveIt();
+		}
+		catch (Exception e)
+		{
+			return Boolean.FALSE;
+		}
 	}
 
 	/*
@@ -88,8 +105,7 @@ public class StudentDaoImpl implements StudentDao
 	@Override
 	public Long count()
 	{
-		Long count = Student.count();
-		return count;
+		return Student.count();
 	}
 
 	/*
@@ -100,19 +116,6 @@ public class StudentDaoImpl implements StudentDao
 	@Override
 	public Long countByFirstName(String firstName)
 	{
-		Long count = Student.count("first_name = ?", firstName);
-		return count;
+		return Student.count("first_name = ?", firstName);
 	}
-
-	private void openConnection()
-	{
-		DataSource dataSource = dataSourceFactory.getDataSource();
-		Base.open(dataSource);
-	}
-
-	private void closeConnection()
-	{
-		Base.close();
-	}
-
 }

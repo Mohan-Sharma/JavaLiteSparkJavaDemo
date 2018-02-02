@@ -33,6 +33,18 @@
                  $http.get("/student/count")
                             .then(function(response){deferred.resolve(response.data);}, function(error) {deferred.reject(error);});
                  return deferred.promise;
+             },
+             saveStudent: function(data){
+                 var deferred = $q.defer();
+                 $http.post("/student/save", data)
+                            .then(function(response){deferred.resolve(response);}, function(error) {deferred.reject(error);});
+                 return deferred.promise;
+             },
+             updateStudent: function(data){
+                 var deferred = $q.defer();
+                 $http.post("/student/update", data)
+                            .then(function(response){deferred.resolve(response);}, function(error) {deferred.reject(error);});
+                 return deferred.promise;
              }
         }
     });
@@ -51,7 +63,7 @@
                          $scope.showTable = true;
                 });
         };
-
+        $scope.student = {rollNumber : "", firstName: "", lastName:""};
         $scope.studentByRollNumber = {rollNumber : "", firstName: "", lastName:""};
         $scope.studentByFirstName = {firstName: ""};
         $scope.studentscount = {count:""};
@@ -59,14 +71,24 @@
         $scope.showClearButtonOne = false;
         $scope.showClearButtonTwo = false;
         $scope.showClearButtonThree = false;
-        $scope.fetchStudentByRollNumber = function(form){
+        $scope.showClearButtonFour = true;
+        $scope.showClearButtonFive = false;
+        $scope.fetchStudentByRollNumber = function(id){
             var rollNumber = $scope.studentByRollNumber.rollNumber;
             studentService
                         .studentByRollNumber(rollNumber)
                         .then(function(data){
                                 if(data)
                                 {
-                                    $scope.studentByRollNumber = data; $scope.showClearButtonOne = true;
+                                    $scope.studentByRollNumber = data;
+                                    if(id === "first")
+                                    {
+                                        $scope.showClearButtonOne = true;
+                                    }
+                                    if(id === "fifth")
+                                    {
+                                        $scope.showClearButtonFive = true;
+                                    }
                                 }
                             });
         };
@@ -74,10 +96,13 @@
         $scope.clearForm = function(form, id) {
             form.$setPristine();
             form.$setUntouched();
-            if(id === "first")
+            if(id === "first" || id === "fifth")
             {
                 $scope.studentByRollNumber = {rollNumber : "", firstName: "", lastName:""};
-                $scope.showClearButtonOne = false;
+                if(id === "first")
+                    $scope.showClearButtonOne = false;
+                if(id === "fifth")
+                    $scope.showClearButtonFive = false;
             }
             if(id === "second")
             {
@@ -88,6 +113,10 @@
             {
                 $scope.studentsCountFirstsName = {firstName: "", count:""};
                 $scope.showClearButtonThree = false;
+            }
+            if(id === "fourth")
+            {
+                $scope.student = {rollNumber : "", firstName: "", lastName:""};
             }
         };
 
@@ -125,6 +154,38 @@
                                $scope.studentscount = data; $scope.showClearButtonTwo = true;
                            }
                        });
+        };
+
+        $scope.saveResult = {success:"", error:""};
+        $scope.updateResult = {success:"", error:""};
+        $scope.saveStudent = function(form){
+             studentService
+                   .saveStudent($scope.student)
+                   .then(function(response){
+                   if(response.data.status)
+                    {
+                        $scope.clearForm(form, "fourth");
+                    }
+                    $scope.saveResult = response.data;
+                   })
+                   .catch(function (error) {
+                        $scope.saveResult = response.data;
+                   });
+        };
+
+        $scope.updateStudent = function(){
+             studentService
+                   .updateStudent($scope.studentByRollNumber)
+                   .then(function(response){
+                    if(response.data.status)
+                     {
+                         $scope.clearForm(form, "fifth");
+                     }
+                     $scope.updateResult = response.data;
+                    })
+                    .catch(function (error) {
+                         $scope.updateResult = response.data;
+                    });
         };
     }])
 

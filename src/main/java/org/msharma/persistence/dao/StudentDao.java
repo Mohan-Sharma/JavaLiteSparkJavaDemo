@@ -1,6 +1,7 @@
 package org.msharma.persistence.dao;
 
 import org.msharma.domain.model.Student;
+import org.msharma.presentation.dto.StudentDTO;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -37,13 +38,13 @@ public interface StudentDao
 	 * This function saves the Student model in db.
 	 * @param student
 	 */
-	void save(Student student);
+	boolean save(Student student);
 
 	/**
-	 * This function saves the collection of students in DB
-	 * @param students
+	 * This function updates the student in db
+	 * @param student
 	 */
-	void saveAll(Collection<Student> students);
+	boolean update(StudentDTO student);
 
 	/**
 	 * This function returns the count of all the records.

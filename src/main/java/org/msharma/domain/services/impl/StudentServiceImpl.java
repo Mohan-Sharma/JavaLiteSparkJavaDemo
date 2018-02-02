@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -29,11 +30,21 @@ public class StudentServiceImpl implements StudentService
 	 * @see org.msharma.domain.services.StudentService#findStudentByRollNumber(int)
 	 */
 	@Override
-	public StudentDTO findStudentByRollNumber(int rollNumber) throws InvocationTargetException, IllegalAccessException
+	public StudentDTO findStudentByRollNumber(int rollNumber)
 	{
 		Student student = studentDao.findStudentByRollNumber(rollNumber);
 		StudentDTO studentDTO = new StudentDTO();
-		BeanUtils.copyProperties( studentDTO, student);
+		if(Objects.nonNull(student))
+		{
+			try
+			{
+				BeanUtils.copyProperties(studentDTO, student);
+			}
+			catch (IllegalAccessException | InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
+		}
 		return studentDTO;
 	}
 
@@ -64,7 +75,7 @@ public class StudentServiceImpl implements StudentService
 								}
 								return studentDTO;
 							})
-					.collect(Collectors.toList());
+							.collect(Collectors.toList());
 		}
 		return studentData;
 	}
@@ -107,29 +118,24 @@ public class StudentServiceImpl implements StudentService
 	 * @see org.msharma.domain.services.StudentService#save(org.msharma.presentation.dto.StudentDTO)
 	 */
 	@Override
-	public void save(StudentDTO studentDto)
+	public boolean save(StudentDTO studentDto)
 	{
-		Student student = Student.create(studentDto.getRollNumber(), studentDto.getFirstName(), studentDto.getLastName());
-		studentDao.save(student);
+		Student student = new Student();
+		student.setRollNumber(studentDto.getRollNumber());
+		student.setFirstName(studentDto.getFirstName());
+		student.setLastName(studentDto.getLastName());
+		return studentDao.save(student);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.msharma.domain.services.StudentService#saveAll(java.util.Collection)
+	 * @see org.msharma.domain.services.StudentService#update(org.msharma.presentation.dto.StudentDTO)
 	 */
 	@Override
-	public void saveAll(Collection<StudentDTO> studentData)
+	public boolean update(StudentDTO studentData)
 	{
-		if(CollectionUtils.isNotEmpty(studentData))
-		{
-			List<Student> students =
-					studentData
-							.stream()
-							.map(studentDTO -> (Student) Student.create(studentDTO.getRollNumber(), studentDTO.getFirstName(), studentDTO.getLastName()))
-							.collect(Collectors.toList());
-			studentDao.saveAll(students);
-		}
+		return studentDao.update(studentData);
 	}
 
 	/*

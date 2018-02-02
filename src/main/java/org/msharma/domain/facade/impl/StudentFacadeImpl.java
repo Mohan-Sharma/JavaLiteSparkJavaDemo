@@ -55,20 +55,34 @@ public class StudentFacadeImpl implements StudentFacade
 	 * @see org.msharma.domain.facade.StudentFacade#save(org.msharma.presentation.dto.StudentDTO)
 	 */
 	@Override
-	public void save(StudentDTO student)
+	public Map<String, Object> save(StudentDTO student)
 	{
-		studentService.save(student);
+		boolean result = studentService.save(student);
+		Map<String, Object> resultMap = Maps.newHashMap();
+		if(result)
+			resultMap.put("success", "successfully saved!");
+		else
+			resultMap.put("error", "Error saving!");
+		resultMap.put("status", result);
+		return resultMap;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.msharma.domain.facade.StudentFacade#saveAll(java.util.Collection)
+	 * @see org.msharma.domain.facade.StudentFacade#update(org.msharma.presentation.dto.StudentDTO)
 	 */
 	@Override
-	public void saveAll(Collection<StudentDTO> students)
+	public Map<String, Object> update(StudentDTO student)
 	{
-		studentService.saveAll(students);
+		boolean result = studentService.update(student);
+		Map<String, Object> resultMap = Maps.newHashMap();
+		if(result)
+			resultMap.put("success", "successfully saved!");
+		else
+			resultMap.put("error", "Error saving!");
+		resultMap.put("status", result);
+		return resultMap;
 	}
 
 	/*
@@ -91,10 +105,10 @@ public class StudentFacadeImpl implements StudentFacade
 	 * @see org.msharma.domain.facade.StudentFacade#countByFirstName(java.util.String)
 	 */
 	@Override
-	public Map<String, Long> countByFirstName(String firstName)
+	public Map<String, Object> countByFirstName(String firstName)
 	{
 		Long count = studentService.countByFirstName(firstName);
-		Map countMap = Maps.newHashMap();
+		Map<String, Object> countMap = Maps.newHashMap();
 		countMap.put("firstName", firstName);
 		countMap.put("count", count);
 		return countMap;

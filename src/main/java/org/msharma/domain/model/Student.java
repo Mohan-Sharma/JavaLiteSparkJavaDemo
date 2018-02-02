@@ -1,12 +1,14 @@
 package org.msharma.domain.model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 /**
  * @author Mohan Sharma Created on 22/01/18.
  */
 @Table("student")
+@IdName("roll_number")
 public class Student extends Model
 {
 	private int rollNumber;

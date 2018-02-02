@@ -38,13 +38,13 @@ public interface StudentFacade
 	 * This function is used to save the Student.
 	 * @param student
 	 */
-	void save(StudentDTO student);
+	Map<String, Object> save(StudentDTO student);
 
 	/**
-	 * This function is used to save all the given students
-	 * @param students
+	 * This function is used to update the given student data.
+	 * @param
 	 */
-	void saveAll(Collection<StudentDTO> students);
+	Map<String, Object> update(StudentDTO student);
 
 	/**
 	 * This function returns the count of all the students available.
@@ -57,5 +57,5 @@ public interface StudentFacade
 	 * @param firstName
 	 * @return number of students satisfying the criteria in db.
 	 */
-	Map<String, Long> countByFirstName(String firstName);
+	Map<String, Object> countByFirstName(String firstName);
 }
